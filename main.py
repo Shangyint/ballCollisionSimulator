@@ -54,10 +54,11 @@ def run(data):
     precision = data.precision
     container = data.container
     f = open(data.res_filename, "w")
-    for _ in range(int(data.time_limit//data.time_stamp)):
+    precision_constant = 10
+    for run_time in range(int(data.time_limit//data.time_stamp) * precision_constant):
         # update ball position
         for ball in data.ball_list:
-            ball.update(data.time_stamp)
+            ball.update(data.time_stamp / 100)
             # check coordinates with the boundary of the container
             for i in range(len(ball.pos)):
                 # check upper bound
@@ -73,16 +74,21 @@ def run(data):
         for pair in itertools.combinations(data.ball_list, 2):
             ball1 = pair[0]
             ball2 = pair[1]
-
+            pos_diff = ball1.pos - ball2.pos
             # TODO
-            if np.linalg.norm(ball1.pos - ball2.pos) <= ball1.r + ball2.r:
+            if np.linalg.norm(pos_diff) <= ball1.r + ball2.r:
                 # change speed
-                ball1.v *= -1
-                ball2.v *= -1
+                mass_total = ball1.m + ball2.m
+                v_norm = (np.dot((ball1.v - ball2.v), (pos_diff)) /
+                    np.linalg.norm(pos_diff) ** 2) * pos_diff
+                ball1.v = ball1.v - ((2 * ball2.m) / mass_total) * v_norm
+                ball2.v = ball2.v + ((2 * ball1.m) / mass_total) * v_norm
 
-        for ball in data.ball_list:
-            f.write("(" + ",".join([str(round(coo, precision)) for coo in ball.pos]) + ");")
-        f.write("\n")
+
+        if run_time % precision_constant == 0:
+            for ball in data.ball_list:
+                f.write("(" + ",".join([str(round(coo, precision)) for coo in ball.pos]) + ");")
+            f.write("\n")
 
     f.close()
 
@@ -90,6 +96,9 @@ def init(input_data, data):
     init_container(input_data, data)
     init_balls(input_data, data)
     init_other(input_data, data)
+
+def final_state_print_to_terminal(data):
+    pass
 
 def main():
     # filename = input()
@@ -100,8 +109,12 @@ def main():
     init(input_data, data)
     
     run(data)
-    if data.container.dimension == 2:
+
+    # if you do not want the graphics component to run
+    # set visualize to 0 in input.json
+    if data.container.dimension == 2 and input_data["visualize"] == 1:
         graphic_client.run_tk(data)
 
+    final_state_print_to_terminal(data)
 if __name__ == '__main__':
     main()
