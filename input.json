@@ -1,0 +1,15 @@
+{
+	"ball_number" : 2,
+
+	"ball1" : [[20, 20], [5, 5], 3, 2],
+
+	"ball2" : [[50, 50], [-5, -10], 3, 2],
+
+	"container": [2, 100, 100, 0],
+
+	"time_stamp" : 0.1,
+
+	"time_limit" : 100,
+
+	"precision" : 2
+}
