@@ -17,7 +17,7 @@
 
 	"visualize" : 1,
 
-	"field": ["force-field", 2, "uniform", [100, 0]],
+	"field": ["force", 2, "uniform", [100, 100]],
 
-	"energy_loss" : 0.8
+	"energy_loss" : 0.9
 }

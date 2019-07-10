@@ -52,11 +52,11 @@ def init_balls(input_data, data):
     for i in range(1, input_data["ball_number"] + 1):
         data.ball_list.append(ball.Ball(input_data["ball"+str(i)]))
 
-    if data.field.name == "gravity":
+    if data.field.name == "acceleration":
         for ball_instance in data.ball_list:
             ball_instance.acc = data.field.acc
 
-    if data.field.name == "force-field":
+    if data.field.name == "force":
         for ball_instance in data.ball_list:
             ball_instance.acc = data.field.force / ball_instance.m
 
@@ -76,7 +76,7 @@ def run(data):
                     ball.v[i] *= data.energy_loss
                     ball.pos[i] = container.upper_bound[i] - ball.r
 
-                    print(ball.v)
+                    # print(ball.v)
                 # check lower bound
                 if ball.pos[i] < ball.r:
                     ball.v[i] *= data.energy_loss
