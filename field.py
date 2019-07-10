@@ -15,4 +15,3 @@ class Field(object):
 			return
 		self.type = arg[2]
 		self.force = np.asarray(arg[3], np.double)
-		
