@@ -49,7 +49,7 @@ def run_tk(data, width=600, height=600):
     # Set up data
     data.width = width
     data.height = height
-    data.timer_delay = 10 # milliseconds
+    data.timer_delay = 35 # milliseconds
     data.is_paused = False
     data.color_list = ["blue", "red", "yellow", "green", "red",]
 

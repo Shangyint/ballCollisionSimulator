@@ -20,3 +20,5 @@ class Container(object):
             self.z = args[3]
             self.lower_bound.append(0)
             self.upper_bound.append(self.z)
+import sys
+print(sys.path)

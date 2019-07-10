@@ -14,6 +14,7 @@ class Ball(object):
         self.v = np.asarray(args[1], np.double)
         self.r = args[2]
         self.m = args[3]
+        self.acc = np.asarray(args[4], np.double)
 
     def update(self, t=1):
         """
@@ -21,5 +22,6 @@ class Ball(object):
         
         @param t = timer_fired
         """
-        self.pos = np.add(self.pos, t * self.v)
+        self.pos = np.add(self.pos, t * self.v + self.acc * (1/2 * t ** 2))
+        self.v = np.add(self.v, t * self.acc)
 

@@ -1,7 +1,7 @@
 {
 	"ball_number" : 3,
 
-	"ball1" : [[20, 60 ], [10, 10 ], 1, 1, [0, 0]],
+	"ball1" : [[20, 10 ], [10, 10 ], 1, 1, [0, 0]],
 
 	"ball2" : [[50, 50], [-10, -30], 4, 16, [0, 0]],
 
@@ -11,13 +11,11 @@
 
 	"time_stamp" : 0.1,
 
-	"time_limit" : 1000,
+	"time_limit" : 100,
 
 	"precision" : 2,
 
 	"visualize" : 1,
 
-	"field": ["force-field", 2, "uniform", [100, 0]],
-
-	"energy_loss" : 0.8
+	"field": ["gravity", 2]
 }

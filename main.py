@@ -1,4 +1,4 @@
-import ball, container, graphic_client
+import ball, container, graphic_client, field
 import numpy as np
 import json, os, itertools
 # import tkinter as tk
@@ -32,8 +32,10 @@ def find_file_name():
 def init_other(input_data, data):
     """
     """
+    data.field = field.Field(input_data["field"])
     data.time_stamp = input_data["time_stamp"]
     data.time_limit = input_data["time_limit"]
+    data.energy_loss = -input_data["energy_loss"]
     data.precision = input_data["precision"]
     data.res_filename = "data_out" + str(find_file_name())
 
@@ -50,25 +52,36 @@ def init_balls(input_data, data):
     for i in range(1, input_data["ball_number"] + 1):
         data.ball_list.append(ball.Ball(input_data["ball"+str(i)]))
 
+    if data.field.name == "gravity":
+        for ball_instance in data.ball_list:
+            ball_instance.acc = data.field.acc
+
+    if data.field.name == "force-field":
+        for ball_instance in data.ball_list:
+            ball_instance.acc = data.field.force / ball_instance.m
+
 def run(data):
     precision = data.precision
     container = data.container
     f = open(data.res_filename, "w")
-    precision_constant = 10
-    for run_time in range(int(data.time_limit//data.time_stamp) * precision_constant):
+    precision_constant = 5
+    for run_time in range(int(data.time_limit //data.time_stamp) * precision_constant):
         # update ball position
         for ball in data.ball_list:
-            ball.update(data.time_stamp / 100)
+            ball.update(data.time_stamp / precision_constant)
             # check coordinates with the boundary of the container
             for i in range(len(ball.pos)):
                 # check upper bound
                 if ball.pos[i] > container.upper_bound[i] - ball.r:
-                    ball.v[i] *= -1
+                    ball.v[i] *= data.energy_loss
                     ball.pos[i] = container.upper_bound[i] - ball.r
+
+                    print(ball.v)
                 # check lower bound
                 if ball.pos[i] < ball.r:
-                    ball.v[i] *= -1
+                    ball.v[i] *= data.energy_loss
                     ball.pos[i] = ball.r
+
 
         # check for collision between balls
         for pair in itertools.combinations(data.ball_list, 2):
@@ -87,15 +100,23 @@ def run(data):
 
         if run_time % precision_constant == 0:
             for ball in data.ball_list:
+                # print(ball.pos, ball.v)
                 f.write("(" + ",".join([str(round(coo, precision)) for coo in ball.pos]) + ");")
             f.write("\n")
+        # print(data.ball_list[0].v)
+        # energy = 0
+        # for ball in data.ball_list:
+        #     energy += (ball.v[1] ** 2) * ball.m / 2
+        #     energy += ball.m * 10 * ball.pos[1]
+        # print(energy)
+
 
     f.close()
 
 def init(input_data, data):
     init_container(input_data, data)
-    init_balls(input_data, data)
     init_other(input_data, data)
+    init_balls(input_data, data)
 
 def final_state_print_to_terminal(data):
     pass
